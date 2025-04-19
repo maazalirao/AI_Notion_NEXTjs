@@ -43,3 +43,4 @@ next-env.d.ts
 # Firebase configuration files with sensitive information
 firebase.ts
 firebase-admin.ts
+service_key.json
