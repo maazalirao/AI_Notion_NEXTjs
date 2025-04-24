@@ -4,7 +4,7 @@ import { useCollection } from "react-firebase-hooks/firestore"
 import NewDocumentButton from "./NewDocumentButton";
 import { useUser } from "@clerk/nextjs";
 import { db } from "../../../firebase";
-import { query, collectionGroup, where, DocumentData  } from "firebase/firestore";
+import { query, collectionGroup, where, DocumentData, getDoc, doc as firebaseDoc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FileText } from "lucide-react";
@@ -19,6 +19,19 @@ interface RoomDocument extends DocumentData {
 
 function DocumentItem({ doc }: { doc: RoomDocument }) {
   const router = useRouter();
+  const [title, setTitle] = useState<string>("");
+  
+  useEffect(() => {
+    const docRef = firebaseDoc(db, "documents", doc.roomId);
+    const unsubscribe = onSnapshot(docRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        setTitle(data?.title || "New Doc");
+      }
+    });
+    
+    return () => unsubscribe();
+  }, [doc.roomId]);
   
   return (
     <div 
@@ -26,7 +39,7 @@ function DocumentItem({ doc }: { doc: RoomDocument }) {
       className="flex items-center gap-2 p-3 hover:bg-gray-300 rounded-md cursor-pointer border border-gray-300 bg-white shadow-sm"
     >
       <FileText className="h-4 w-4 text-blue-500" />
-      <span className="truncate font-medium">{doc.title || "New Doc"}</span>
+      <span className="truncate font-medium">{title || "New Doc"}</span>
     </div>
   );
 }
