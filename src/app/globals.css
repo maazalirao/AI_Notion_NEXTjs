@@ -117,3 +117,24 @@
   }
 }
 
+/* BlockNote Editor Styles */
+.editor {
+  min-height: 400px;
+  border-radius: 8px;
+  position: relative;
+}
+
+/* Thread styles */
+.anchored-threads {
+  position: relative;
+  z-index: 30;
+}
+
+.floating-threads {
+  z-index: 40;
+}
+
+.floating-composer {
+  z-index: 50;
+}
+
