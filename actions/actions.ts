@@ -6,7 +6,7 @@ import { title } from "process";
 
 export async function createNewDocument(){
 
-    auth.protect()
+    auth.protect();
 
     const {sessionClaims} = await auth();
     
@@ -15,5 +15,12 @@ export async function createNewDocument(){
         title:"New Doc"
     })
 
-    await admindb.collection('users').doc(sessionClaims?.email!)
+    await admindb.collection('users').doc(sessionClaims?.email!).collection
+    ('rooms').doc(docRef.id).set({
+        userId: sessionClaims?.email!,
+        role: "owner",
+        createdAt: new Date(),
+        roomId: docRef.id,
+    })
+    return { docId: docRef.id };
 }
